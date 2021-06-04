@@ -26,6 +26,8 @@ aumentarEnergia valor (UnTripulante energia) = UnTripulante (energia+valor)
 
 tripulanteEstaMuerto (UnTripulante energia) = energia==0
 
+obtenerEnergia (UnTripulante energia) = energia
+
 -- Barcos
 
 data Barco = UnBarco{
@@ -61,5 +63,27 @@ tresPorTripulante tripulantes = 3 * length tripulantes
 
 llenarConOro (UnBarco tamanio tripulantes oro tablones balas) = UnBarco tamanio tripulantes (7*tamanio) tablones balas
 
+--Enfrentamientos
+
+enfrentamiento barco barcoenemigo
+    |tamañoBarco barco > tamañoBarco barcoenemigo = ganaMasSegun balasBarco barco barcoenemigo
+    |tamañoBarco barco == tamañoBarco barcoenemigo = ganaMasSegun tablonesBarco barco barcoenemigo
+    |otherwise = ganaMasSegun tripulantesConVida barco barcoenemigo
+
+tamañoBarco (UnBarco tamanio _ _ _ _) = tamanio
+
+tablonesBarco (UnBarco _ _ _ tablones _) = tablones
+
+balasBarco (UnBarco _ _ _ _ balas) = balas
+
+tripulantesVivos tripulantes = (filter (/=0) . map obtenerEnergia) tripulantes
+
+tripulantesConVida (UnBarco _ tripulantes _ _ _) = (length . tripulantesVivos) tripulantes
+
+ganaMasSegun frecurso barco barcoenemigo
+    |frecurso barco >= frecurso barcoenemigo = barcoLeGanoA barco barcoenemigo
+    |otherwise = barcoLeGanoA barcoenemigo barco
 
 
+
+barcoLeGanoA barco barcoperdedor = 
